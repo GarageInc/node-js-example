@@ -8,9 +8,11 @@ var http = require('http');
 var morgan = require('morgan');
 var config = require('config');
 var HttpError = require('error').HttpError;
+var session = require('express-session')
+var mongo = require('libs/mongo');
+var errorHandler = require('errorhandler')
 
 var app = express();
-
 
 //  engine setup
 app.engine('ejs', require('ejs-locals'))
@@ -35,8 +37,28 @@ if (app.get('env') == 'development') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
+var MongoStore = require('connect-mongo')(session);
+
+app.use(session({
+  secret: config.get('session:secret'), // ABCDE242342342314123421.SHA256
+  key: config.get('session:key'),
+  cookie: config.get('session:cookie'),
+  store: new MongoStore({mongooseConnection: mongo.connection})
+}))
+
+//app.use(function(req, res, next) {
+//  req.session.numberOfVisits = req.session.numberOfVisits + 1 || 1;
+//  res.send("Visits: " + req.session.numberOfVisits);
+//});
+
+
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(require('middleware/sendHttpError'));
+app.use(require('middleware/loadUser'));
+
 require('routes')(app);
 //app.use('/', routes);
 
@@ -51,7 +73,7 @@ app.use(function(err, req, res, next) {
     res.sendHttpError(err);
   } else {
     if (app.get('env') == 'development') {
-      express.errorHandler()(err, req, res, next);
+      errorHandler()(err, req, res, next);
     } else {
       log.error(err);
       err = new HttpError(500);
@@ -61,8 +83,20 @@ app.use(function(err, req, res, next) {
 });
 
 
-http.createServer(app).listen(config.get('port'), function(){
+var server = http.createServer(app).listen(config.get('port'), function(){
   log.info('Express server listening on port ' + config.get('port'));
+});
+
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+
+  socket.on('message', function (text, cb) {
+    socket.broadcast.emit('message', text);
+    cb("123");
+  });
+
 });
 
 module.exports = app;
