@@ -1,6 +1,5 @@
 module.exports = function(req, res, next) {
 
-    console.log("blla")
     res.sendHttpError = function(error) {
 
         res.status(error.status);
