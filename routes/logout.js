@@ -1,5 +1,11 @@
+exports.post = function(req, res, next) {
+    var sid = req.session.id;
 
-exports.post = function(req, res) {
-    req.session.destroy();
-    res.redirect('/');
+    var io = req.app.get('io');
+    req.session.destroy(function(err) {
+        io.sockets.$emit("session:reload", sid);
+        if (err) return next(err);
+
+        res.redirect('/');
+    });
 };

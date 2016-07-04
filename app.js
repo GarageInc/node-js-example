@@ -9,7 +9,6 @@ var morgan = require('morgan');
 var config = require('config');
 var HttpError = require('error').HttpError;
 var session = require('express-session')
-var mongo = require('libs/mongo');
 var errorHandler = require('errorhandler')
 
 var app = express();
@@ -39,13 +38,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-var MongoStore = require('connect-mongo')(session);
+
+var sessionStore = require('libs/sessionStore');
 
 app.use(session({
   secret: config.get('session:secret'), // ABCDE242342342314123421.SHA256
   key: config.get('session:key'),
   cookie: config.get('session:cookie'),
-  store: new MongoStore({mongooseConnection: mongo.connection})
+  store: sessionStore
 }))
 
 //app.use(function(req, res, next) {
@@ -87,6 +87,7 @@ var server = http.createServer(app).listen(config.get('port'), function(){
   log.info('Express server listening on port ' + config.get('port'));
 });
 
-require('./socket')(server);
+var io = require('./socket')(server);
+app.set('io', io);
 
 module.exports = app;
