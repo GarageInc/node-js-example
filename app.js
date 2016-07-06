@@ -3,11 +3,11 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var log = require('libs/log')(module);
+var log = require('./libs/log')(module);
 var http = require('http');
 var morgan = require('morgan');
-var config = require('config');
-var HttpError = require('error').HttpError;
+var config = require('./config');
+var HttpError = require('./error').HttpError;
 var session = require('express-session')
 var errorHandler = require('errorhandler')
 
@@ -18,7 +18,7 @@ app.engine('ejs', require('ejs-locals'))
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
 
-var User = require('models/user').User
+var User = require('./models/user').User
 app.get('/users', function(req,res,next){
   User.find({}, function(err,users){
     if(err) next(err);
@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 
 
-var sessionStore = require('libs/sessionStore');
+var sessionStore = require('./libs/sessionStore');
 
 app.use(session({
   secret: config.get('session:secret'), // ABCDE242342342314123421.SHA256
@@ -56,10 +56,10 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('middleware/sendHttpError'));
-app.use(require('middleware/loadUser'));
+app.use(require('./middleware/sendHttpError'));
+app.use(require('./middleware/loadUser'));
 
-require('routes')(app);
+require('./routes')(app);
 //app.use('/', routes);
 
 

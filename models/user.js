@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var async = require('async')
 var util = require('util');
 
-var mongoose = require('libs/mongo'),
+var mongoose = require('../libs/mongo'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({

@@ -35,7 +35,7 @@
 //
 //};
 
-var checkAuth = require('middleware/checkAuth');
+var checkAuth = require('../middleware/checkAuth');
 
 module.exports = function(app) {
 
