@@ -1,12 +1,13 @@
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var BowerWebpackPlugin = require('bower-webpack-plugin');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
 
     entry: [
         'webpack-hot-middleware/client',
-        './www/server.js',
+        './bin/server.js',
     ],
 
     output: {
@@ -14,10 +15,7 @@ module.exports = {
     },
 
     module: {
-        loaders: [{
-            test: /\.scss$/,
-            loader: 'style!css?localIdentName=[path][name]--[local]!postcss-loader!sass'
-        }]
+        loaders: [ ]
     },
 
     plugins: [

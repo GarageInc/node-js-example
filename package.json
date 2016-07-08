@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./server.js"
+    "start": "node ./bin/server.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
@@ -20,6 +20,7 @@
     "autoprefixer-core": "^6.0.1",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
+    "babel-polyfill": "^6.9.1",
     "bower-webpack-plugin": "^0.1.9",
     "browser-sync": "^2.13.0",
     "ejs-loader": "^0.3.0",
@@ -30,10 +31,13 @@
     "gulp-notify": "^2.2.0",
     "html-webpack-plugin": "^2.22.0",
     "json-loader": "^0.5.4",
+    "postcss-import": "^8.1.2",
     "session": "^0.1.0",
+    "socket.io": "^1.4.8",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^1.14.1",
-    "webpack-hot-middleware": "^2.12.1"
+    "webpack-hot-middleware": "^2.12.1",
+    "webpack-merge": "^0.14.0"
   }
 }

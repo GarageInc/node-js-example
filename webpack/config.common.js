@@ -1,15 +1,16 @@
+'use-strict'
+var path = require('path');
+var autoprefixer = require('autoprefixer');
+var postcssImport = require('postcss-import');
+var merge = require('webpack-merge');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const path = require('path');
-const autoprefixer = require('autoprefixer');
-const postcssImport = require('postcss-import');
-const merge = require('webpack-merge');
+var development = require('./config.development.js');
+var production = require('./config.production.js');
 
-const development = require('./config.development.js');
-const production = require('./config.prodaction.js');
+//require('babel-polyfill').default;
 
-require('babel-polyfill').default;
-
-const TARGET = process.env.npm_lifecycle_event;
+var TARGET = process.env.npm_lifecycle_event;
 
 const PATHS = {
     app: path.join(__dirname, '../bin/server.js'),
@@ -36,15 +37,15 @@ const common = {
     },
 
     module: {
-        preLoaders: [
-            {
-                test: /\.js$/,
-                loaders: ['eslint'],
-                include: [
-                    path.resolve(__dirname, PATHS.app),
-                ]
-            }
-        ],
+        //preLoaders: [
+        //    {
+        //        test: /\.js$/,
+        //        loaders: ['eslint'],
+        //        include: [
+        //            path.resolve(__dirname, PATHS.app),
+        //        ]
+        //    }
+        //],
         loaders: [
             { test: /\.json$/, loader: "json-loader" },
             {
@@ -79,10 +80,13 @@ const common = {
     }
 };
 
-if (TARGET === 'start' || !TARGET) {
-    module.exports = merge(development, common);
-}
 
-if (TARGET === 'build' || !TARGET) {
-    module.exports = merge(production, common);
+console.log("TARGET: " + TARGET)
+
+if ( TARGET === 'start' || !TARGET) {
+
+    module.exports = merge( development, common);
+} else {
+
+    module.exports = merge( production, common);
 }

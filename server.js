@@ -16,10 +16,9 @@ var app = express();
   WEBPACK
  */
 
-
 (function initWebpack() {
   const webpack = require('webpack');
-  const webpackConfig = require('./webpack/common.config');
+  const webpackConfig = require('./webpack/config.common');
   const compiler = webpack( webpackConfig);
 
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -34,22 +33,18 @@ var app = express();
 
 })();
 
-
+/*
+  ENGINES
+ */
 
 //  engine setup
 app.engine('ejs', require('ejs-locals'))
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
 
-var User = require('./models/user').User
-app.get('/users', function(req,res,next){
-  User.find({}, function(err,users){
-    if(err)
-      next(err);
-
-    res.json(users)
-  })
-})
+/*
+  USINGS
+ */
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -99,14 +94,15 @@ app.use(function(err, req, res, next) {
   }
 });
 
-
 /*
   DEV_SERVER
  */
 
 var server = http.createServer( app)
 
-app.listen(process.env.PORT || config.get('port'), '127.0.0.1', err => {
+console.log(process.env.PORT || config.get('port'))
+
+app.listen(process.env.PORT || config.get('port'), '127.0.0.1', function(err) {
   if (err) {
     console.log(err);
     return;
@@ -114,6 +110,7 @@ app.listen(process.env.PORT || config.get('port'), '127.0.0.1', err => {
 
   console.log('Listening ...');
 });
+
 
 var io = require('./socket')( server);
 app.set('io', io);

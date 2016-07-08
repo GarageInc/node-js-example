@@ -1,5 +1,6 @@
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
+var BowerWebpackPlugin = require('bower-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
@@ -9,10 +10,7 @@ module.exports = {
     },
 
     module: {
-        loaders: [{
-            test: /\.scss$/,
-            loader: 'style!css!postcss-loader!sass'
-        }]
+        loaders: [ ]
     },
 
     plugins: [
@@ -35,6 +33,7 @@ module.exports = {
         }),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
+        
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
@@ -44,6 +43,6 @@ module.exports = {
             output: {
                 comments: false
             }
-        }),
+        })
     ]
 };
