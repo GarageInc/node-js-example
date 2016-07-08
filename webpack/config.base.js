@@ -1,53 +1,50 @@
 
-var path = require('path');
-var webpack = require('webpack');
-var fs = require('fs');
-var glob = require('glob')  ;
+const path = require('path');
+const autoprefixer = require('autoprefixer');
+const postcssImport = require('postcss-import');
+const merge = require('webpack-merge');
 
-var BowerWebpackPlugin = require('bower-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var WebpackDevServer = require('webpack-dev-server');
+const development = require('./config.development.js');
+const production = require('./config.prodaction.js');
 
-var DEVELOPMENT = "development"
-var PRODUCTION = "production"
+require('babel-polyfill').default;
 
-var FRONTEND_DIR = "frontend"
-var BUILD_DIR = "build"
+const TARGET = process.env.npm_lifecycle_event;
 
-var buildPath = path.resolve(__dirname, BUILD_DIR);
+const PATHS = {
+    app: path.join(__dirname, '../bin/server.js'),
+    build: path.join(__dirname, '../build')
+};
 
-const NODE_ENV =  process.env.NODE_ENV || DEVELOPMENT
+process.env.BABEL_ENV = TARGET;
 
-var config = {
-
-    context: __dirname,
-
+const common = {
     entry: [
-        './server.js'
+        PATHS.app,
     ],
 
     output: {
-        path: buildPath,
+        path: PATHS.build,
         filename: "[name].js",
         chunkFilename: "[id].js"
     },
 
-    extensions: [
-        '',
-        '.jsx', '.js',
-        '.json',
-        '.html',
-        '.css', '.styl', '.scss', '.sass'
-    ],
-
     resolve: {
-        extensions: ['', '.js'],
-        modulesDirectories: ['node_modules', 'bower_components'],
+        extensions: ['', '.jsx', '.js', '.json', '.scss'],
+        modulesDirectories: ['node_modules', 'bower_components', PATHS.app],
         modulesTemplates: ['*-loader', '*']
     },
 
     module: {
+        preLoaders: [
+            {
+                test: /\.js$/,
+                loaders: ['eslint'],
+                include: [
+                    path.resolve(__dirname, PATHS.app),
+                ]
+            }
+        ],
         loaders: [
             { test: /\.json$/, loader: "json-loader" },
             {
@@ -69,47 +66,23 @@ var config = {
             }
         ]
     },
-    postcss: [
-        require('autoprefixer-core')
-    ],
-    plugins: [
-        new BowerWebpackPlugin({
-            modulesDirectories: ['bower_components'],
-            manifestFiles: ['bower.json', '.bower.json'],
-            includes: /.*/,
-            excludes: /.*\.less$/
-        }),
-        new ExtractTextPlugin("[name].css",{
-            allChunks: true
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "common",
-            minChunks: 2
-        }),
-        new webpack.ProvidePlugin({
-            _: "underscore"
-        }),
-        // TODO: разобраться
-        new webpack.optimize.OccurenceOrderPlugin()
-    ]
+
+    postcss: (webpack) => {
+        return [
+            autoprefixer({
+                browsers: ['last 2 versions']
+            }),
+            postcssImport({
+                addDependencyTo: webpack
+            }),
+        ];
+    }
 };
 
-//if(NODE_ENV == PRODUCTION){
-//    config.plugins.push(
-//
-//        new webpack.optimize.UglifyJsPlugin({
-//            compress: {
-//                warnings: false,
-//                drop_console: true,
-//                unsafe: true
-//            },
-//            output: {
-//                comments: false
-//            }
-//        })
-//    )
-//}
+if (TARGET === 'start' || !TARGET) {
+    module.exports = merge(development, common);
+}
 
-
-module.exports = config
-
+if (TARGET === 'build' || !TARGET) {
+    module.exports = merge(production, common);
+}

@@ -1,56 +1,51 @@
-'use-strict';
-
 const webpack = require('webpack');
-const baseConfig = require('./config.base');
-var path = require('path');
-var fs = require('fs');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const config = Object.create(baseConfig);
-config.debug = true;
+module.exports = {
+    devtool: 'cheap-module-eval-source-map',
 
-//var nodeModules = {};
-//
-//fs.readdirSync(path.resolve(__dirname, 'node_modules'))
-//    .filter(function(x) {
-//        return ['.bin'].indexOf(x) === -1;
-//    })
-//    .forEach(function(mod) {
-//        nodeModules[mod] = 'commonjs ' + mod;
-//    });
-//
-//config.externals = nodeModules,
-//config.target = 'node',
+    entry: [
+        'webpack-hot-middleware/client',
+        './www/server.js',
+    ],
 
-config.entry = [
-    'webpack-hot-middleware/client?path=http://localhost:3011/__webpack_hmr',
-    './app/index'
-];
+    output: {
+        publicPath: '/public/'
+    },
 
-config. devtool = "source-map";
+    module: {
+        loaders: [{
+            test: /\.scss$/,
+            loader: 'style!css?localIdentName=[path][name]--[local]!postcss-loader!sass'
+        }]
+    },
 
-config.output.publicPath = 'http://localhost:3000/public/';
-
-
-config.watch = true;
-
-config.watchOptions = {
-    aggregateTimeout: 1000
-}
-
-
-config.plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-        '__DEV__': true,
-        'process.env': {
-            'NODE_ENV': JSON.stringify('development')
-        },
-
-        NODE_PATH: ".",
-        NODE_ENV: JSON.stringify( 'development'),
-        LANG: JSON.stringify("ru-ru")
-    })
-);
-
-module.exports = config;
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('development'),
+                'NODE_PATH': ".",
+                'LANG': JSON.stringify("ru-ru")
+            },
+            __DEVELOPMENT__: true
+        }),
+        new BowerWebpackPlugin({
+            modulesDirectories: ['bower_components'],
+            manifestFiles: ['bower.json', '.bower.json'],
+            includes: /.*/,
+            excludes: /.*\.less$/
+        }),
+        new ExtractTextPlugin("[name].css",{
+            allChunks: true
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "common",
+            minChunks: 2
+        }),
+        new webpack.ProvidePlugin({
+            _: "underscore"
+        }),
+        // TODO: разобраться
+        new webpack.optimize.OccurenceOrderPlugin()
+    ]
+};

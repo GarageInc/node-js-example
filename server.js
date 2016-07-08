@@ -20,10 +20,9 @@ var app = express();
 (function initWebpack() {
   const webpack = require('webpack');
   const webpackConfig = require('./webpack/common.config');
-  const compiler = webpack(webpackConfig);
+  const compiler = webpack( webpackConfig);
 
   app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
     publicPath: webpackConfig.output.publicPath
   }));
 
@@ -59,6 +58,7 @@ if (app.get('env') == 'development') {
 } else {
   app.use(morgan('common'));
 }
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -115,7 +115,7 @@ app.listen(process.env.PORT || config.get('port'), '127.0.0.1', err => {
   console.log('Listening ...');
 });
 
-var io = require('./socket')( devServer);
+var io = require('./socket')( server);
 app.set('io', io);
 
 module.exports = app;
