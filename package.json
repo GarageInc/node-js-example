@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./server.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
@@ -16,6 +16,8 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "autoprefixer": "^6.3.7",
+    "autoprefixer-core": "^6.0.1",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "bower-webpack-plugin": "^0.1.9",
@@ -30,6 +32,8 @@
     "json-loader": "^0.5.4",
     "session": "^0.1.0",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-hot-middleware": "^2.12.1"
   }
 }
