@@ -8,13 +8,13 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var development = require('./config.development.js');
 var production = require('./config.production.js');
 
-//require('babel-polyfill').default;
+require('babel-polyfill').default;
 
 var TARGET = process.env.npm_lifecycle_event;
 
 const PATHS = {
     app: path.join(__dirname, '../bin/server.js'),
-    build: path.join(__dirname, '../build')
+    outputBuild: path.join(__dirname, '../build')
 };
 
 process.env.BABEL_ENV = TARGET;
@@ -25,9 +25,9 @@ const common = {
     ],
 
     output: {
-        path: PATHS.build,
-        filename: "[name].js",
-        chunkFilename: "[id].js"
+        path: PATHS.outputBuild,
+        filename:  "[name].[chunkhash].js",
+        chunkFilename: '[id].[chunkhash].js',
     },
 
     resolve: {

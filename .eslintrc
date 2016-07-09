@@ -6,7 +6,6 @@
     "node": true
   },
   "plugins": [
-    "react"
   ],
   "rules": {
     "no-debugger": 0,

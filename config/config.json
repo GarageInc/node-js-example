@@ -1,13 +1,15 @@
 {
   "port": 3000,
   "mongoose": {
-    "uri": "mongodb://localhost/chat",
+    "uri": "ds015335.mlab.com:15335/rinat-fichtengoltz",
     "options": {
       "server": {
         "socketOptions": {
           "keepAlive": 1
         }
-      }
+      },
+      "user": "RinatF",
+      "pass": "hnkrwt5e"
     }
   },
   "session": {
