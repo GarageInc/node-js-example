@@ -14,7 +14,7 @@ var TARGET = process.env.npm_lifecycle_event;
 
 const PATHS = {
     app: path.join(__dirname, '../bin/server.js'),
-    outputBuild: path.join(__dirname, '../build')
+    outputBuildProduction: path.join(__dirname, '../build')
 };
 
 process.env.BABEL_ENV = TARGET;
@@ -25,7 +25,7 @@ const common = {
     ],
 
     output: {
-        path: PATHS.outputBuild,
+        path: PATHS.outputBuildProduction,
         filename:  "[name].[chunkhash].js",
         chunkFilename: '[id].[chunkhash].js',
     },
@@ -55,16 +55,22 @@ const common = {
             },{
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
-            },{
-                test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g)$/,
-                loader: 'url-loader?limit=30000&name=[path][name].[ext]?[hash]'
-            },{
+            },
+            {
+                test: /\.(png|ico|jpg|jpeg|gif|svg)$/,
+                loaders: ['url-loader?limit=30000&&name=img/[name].[ext]']
+            },
+            {
+                test: /\.(ttf|eot|woff|woff2)$/i,
+                loaders: ['url-loader?limit=30000&&name=css/fonts/[name].[ext]']
+            },
+            {
                 test: /\.html$/,
                 loader: 'html-loader'
             },{
                 test: /\.ejs$/,
                 loader: 'ejs-loader?variable=data'
-            }
+            },
         ]
     },
 
