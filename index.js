@@ -1,3 +1,4 @@
+var fs = require('fs')
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -9,6 +10,9 @@ var config = require('./config');
 var HttpError = require('./error').HttpError;
 var session = require('express-session')
 var errorHandler = require('errorhandler')
+
+//require("./templates")
+//require("./public/css/app.css")
 
 var app = express();
 
@@ -27,8 +31,7 @@ var app = express();
 
   app.use(require('webpack-hot-middleware')(compiler, {
     log: console.log,
-    path: '/__webpack_hmr',
-    heartbeat: 10 * 1000
+    path: '/__webpack_hmr'
   }));
 
 })();

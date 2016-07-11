@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "set NODE_ENV=development && node ./bin/server.js",
-    "prod": "set NODE_ENV=production && node ./bin/server.js"
+    "dev": "set NODE_ENV=development && node ./bin/index.js",
+    "prod": "set NODE_ENV=production && node ./bin/index.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
@@ -17,6 +17,7 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "async": "^2.0.0-rc.6",
     "autoprefixer": "^6.3.7",
     "autoprefixer-core": "^6.0.1",
     "babel-cli": "^6.10.1",
@@ -27,6 +28,9 @@
     "babel-register": "^6.9.0",
     "bower-webpack-plugin": "^0.1.9",
     "browser-sync": "^2.13.0",
+    "connect": "^3.4.1",
+    "connect-mongo": "^1.2.1",
+    "cookie": "^0.3.1",
     "ejs-loader": "^0.3.0",
     "ejs-locals": "^1.0.2",
     "errorhandler": "^1.4.3",
@@ -38,6 +42,7 @@
     "gulp-notify": "^2.2.0",
     "html-webpack-plugin": "^2.22.0",
     "json-loader": "^0.5.4",
+    "mongoose": "^4.5.3",
     "nconf": "^0.8.4",
     "postcss-import": "^8.1.2",
     "react": "^15.2.1",

@@ -1,5 +1,6 @@
 'use-strict'
 var path = require('path');
+var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var postcssImport = require('postcss-import');
 var merge = require('webpack-merge');
@@ -9,30 +10,30 @@ var BowerWebpackPlugin = require('bower-webpack-plugin');
 var development = require('./config.development.js');
 var production = require('./config.production.js');
 
-require('babel-polyfill').default;
-
-var TARGET = process.env.npm_lifecycle_event;
+//require('babel-polyfill').default;
 
 const PATHS = {
-    app: path.join(__dirname, '../bin/server.js'),
-    outputBuildProduction: path.join(__dirname, '../build')
+    //app: path.join(__dirname, 'bin', 'server.js'),
+    app: path.join('bin','server.js'),
+    outputBuildProduction: 'build'
 };
 
-process.env.BABEL_ENV = TARGET;
+process.env.BABEL_ENV = process.env.npm_lifecycle_event;
 
 const common = {
     entry: [
         PATHS.app,
     ],
 
+
     output: {
         path: PATHS.outputBuildProduction,
         filename:  "[name].[chunkhash].js",
-        chunkFilename: '[id].[chunkhash].js',
+        chunkFilename: '[id].[chunkhash].js'
     },
 
     resolve: {
-        extensions: ['', '.jsx', '.js', '.json', '.scss'],
+        extensions: ['', '.jsx', '.js', '.json', '.scss', '.css'],
         modulesDirectories: ['node_modules', 'bower_components', PATHS.app],
         modulesTemplates: ['*-loader', '*']
     },
@@ -110,9 +111,9 @@ const common = {
 };
 
 
-console.log("TARGET: " + TARGET)
+console.log("TARGET: " + process.env.NODE_ENV)
 
-if ( TARGET === 'start' || !TARGET) {
+if ( process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
 
     module.exports = merge( development, common);
 } else {
