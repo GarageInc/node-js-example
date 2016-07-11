@@ -1,4 +1,6 @@
 'use-strict'
+
+var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
@@ -6,48 +8,45 @@ var postcssImport = require('postcss-import');
 var merge = require('webpack-merge');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var development = require('./config.development.js');
 var production = require('./config.production.js');
 
 //require('babel-polyfill').default;
 
-const PATHS = {
-    //app: path.join(__dirname, 'bin', 'server.js'),
-    app: path.join('bin','server.js'),
-    outputBuildProduction: 'build'
-};
-
 process.env.BABEL_ENV = process.env.npm_lifecycle_event;
 
+var nodeModules = {};
+fs.readdirSync(path.resolve(__dirname, './../node_modules'))
+    .filter(x => ['.bin'].indexOf(x) === -1)
+    .forEach(mod => { nodeModules[mod] = `commonjs ${mod}`; });
+
 const common = {
+    target: 'node',
+
+    externals: nodeModules,
+
     entry: [
-        PATHS.app,
+        path.resolve(__dirname, "./../bin/"),
+        path.resolve(__dirname, "./../entry.js"),
     ],
 
 
     output: {
-        path: PATHS.outputBuildProduction,
+        path: path.resolve(__dirname, "./../build/"),
+        publicPath: '',
         filename:  "[name].[chunkhash].js",
         chunkFilename: '[id].[chunkhash].js'
     },
 
     resolve: {
         extensions: ['', '.jsx', '.js', '.json', '.scss', '.css'],
-        modulesDirectories: ['node_modules', 'bower_components', PATHS.app],
+        modulesDirectories: ['node_modules', 'bower_components'],
         modulesTemplates: ['*-loader', '*']
     },
 
     module: {
-        //preLoaders: [
-        //    {
-        //        test: /\.js$/,
-        //        loaders: ['eslint'],
-        //        include: [
-        //            path.resolve(__dirname, PATHS.app),
-        //        ]
-        //    }
-        //],
         loaders: [
             { test: /\.json$/, loader: "json-loader" },
             {
@@ -73,30 +72,31 @@ const common = {
                 test: /\.ejs$/,
                 loader: 'ejs-loader?variable=data'
             },
-        ],
-
-        plugins: [
-
-            new BowerWebpackPlugin({
-                modulesDirectories: ['bower_components'],
-                manifestFiles: ['bower.json', '.bower.json'],
-                includes: /.*/,
-                excludes: /.*\.less$/
-            }),
-            new ExtractTextPlugin("[name].css",{
-                allChunks: true
-            }),
-            new webpack.optimize.DedupePlugin(),
-            new webpack.optimize.OccurenceOrderPlugin(),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: "common",
-                minChunks: 2
-            }),
-            new webpack.ProvidePlugin({
-                _: "underscore"
-            }),
         ]
     },
+
+    plugins: [
+        new BowerWebpackPlugin({
+            modulesDirectories: ['bower_components'],
+            manifestFiles: ['bower.json', '.bower.json'],
+            includes: /.*/,
+            excludes: /.*\.less$/
+        }),
+        new ExtractTextPlugin("[name].css",{
+            allChunks: true
+        }),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "common",
+            minChunks: 2
+        }),
+        new webpack.ProvidePlugin({
+            _: "underscore"
+        }),
+        new HtmlWebpackPlugin()
+    ],
 
     postcss: (webpack) => {
         return [

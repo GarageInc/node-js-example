@@ -11,14 +11,12 @@ var HttpError = require('./error').HttpError;
 var session = require('express-session')
 var errorHandler = require('errorhandler')
 
-//require("./templates")
-//require("./public/css/app.css")
-
 var app = express();
 
 /*
   WEBPACK
  */
+
 
 (function initWebpack() {
   const webpack = require('webpack');
@@ -101,21 +99,19 @@ app.use(function(err, req, res, next) {
   DEV_SERVER
  */
 
-var server = http.createServer( app)
-
-console.log(process.env.PORT || config.get('port'))
-
-app.listen(process.env.PORT || config.get('port'), '127.0.0.1', function(err) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  console.log('Listening ...');
-});
-
-
-var io = require('./socket')( server);
-app.set('io', io);
+//var server = http.createServer( app)
+//
+//app.listen(process.env.PORT || config.get('port'), '127.0.0.1', function(err) {
+//  if (err) {
+//    console.log(err);
+//    return;
+//  }
+//
+//  console.log('Listening ...');
+//});
+//
+//
+//var io = require('./socket')( server);
+//app.set('io', io);
 
 module.exports = app;

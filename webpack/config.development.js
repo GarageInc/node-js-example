@@ -1,14 +1,20 @@
+'use-strict'
 var webpack = require('webpack');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
 
     entry: [
-        'webpack-hot-middleware/client',
+        'webpack-hot-middleware/client','webpack/hot/dev-server'
     ],
 
-    output: {
-        publicPath: './build'
+    watch: false,
+    watchOptions: {
+        aggregateTimeout: 300
+    },
+
+    devServer:{
+        contentBase: "./public"
     },
 
     plugins: [
