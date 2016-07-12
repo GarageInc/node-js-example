@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prod": "set NODE_ENV=production && node ./build/index.js"
+    "start": "node ./build/server.js --progress"
   },
   "dependencies": {
     "body-parser": "~1.15.1",

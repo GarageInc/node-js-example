@@ -11,33 +11,36 @@ var HttpError = require('./error').HttpError;
 var expressSession = require('express-session')
 var errorHandler = require('errorhandler')
 
+
 var app = express();
 
 /*
   WEBPACK
  */
 
+if (app.get("env") == "development"){
 
-(function initWebpack() {
-  var webpack = require('webpack');
-  var webpackConfig = require('./webpack/webpack.config.js');
-  var compiler = webpack( webpackConfig);
+  (function initWebpack() {
+    var webpack = require('webpack');
+    var webpackConfig = require('./webpack/config.development.js');
+    var compiler = webpack( webpackConfig);
 
-  app.use(require('webpack-dev-middleware')( compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    inline: true,
-    hot: true
-  }));
+    console.log( webpackConfig)
+    app.use(require('webpack-dev-middleware')( compiler, {
+      noInfo: true,
+      publicPath: webpackConfig.output.publicPath
+      //inline: true,
+      //hot: true
+    }));
 
-  app.use(require('webpack-hot-middleware')(compiler, {
-    log: console.log,
-    path: '/__webpack_hmr'
-  }));
+    app.use(require('webpack-hot-middleware')(compiler, {
+      log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
+    }));
 
-  compiler.run(function(){
-    
-  })
-})();
+
+  })();
+}
+
 
 /*
   ENGINES
