@@ -23,8 +23,10 @@ var app = express();
   var webpackConfig = require('./webpack/webpack.config.js');
   var compiler = webpack( webpackConfig);
 
-  app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath: webpackConfig.output.publicPath
+  app.use(require('webpack-dev-middleware')( compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    inline: true,
+    hot: true
   }));
 
   app.use(require('webpack-hot-middleware')(compiler, {
@@ -33,9 +35,8 @@ var app = express();
   }));
 
   compiler.run(function(){
-
+    
   })
-
 })();
 
 /*

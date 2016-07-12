@@ -4,7 +4,6 @@ var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
-var postcssImport = require('postcss-import');
 var merge = require('webpack-merge');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
@@ -25,12 +24,11 @@ var config = {
 
     externals: nodeModules,
 
+    devtool:  "source-map" ,
+
     context: path.resolve(__dirname, "./../"),
 
     entry: {
-        //path.resolve(__dirname, "./../bin/"),
-
-        //app: "./bin/index.js",
 
         server: [
             "./bin/index.js"
@@ -41,7 +39,7 @@ var config = {
     },
 
     output: {
-        path: path.join(__dirname, "build"),
+        path: path.join(__dirname, "..", "build"),
         // filename:  "[name].[chunkhash].js",
         // chunkFilename: '[id].[chunkhash].js'
         filename:  "[name].js",
@@ -101,28 +99,28 @@ var config = {
         new ExtractTextPlugin("[name].css",{
             allChunks: true
         }),
-        //new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: "common",
             minChunks: 2
         }),
-        //new webpack.ProvidePlugin({
-        //    _: "underscore"
-        //}),
-        new HtmlWebpackPlugin()
+        new webpack.ProvidePlugin({
+            _: "underscore"
+        })
     ]
 
 };
 
 
-console.log("TARGET: " + process.env.NODE_ENV)
 
-if ( process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+if ( process.env.NODE_ENV === 'production' || !process.env.NODE_ENV) {
 
-    module.exports = merge( development, config);
+    console.log("production")
+    module.exports = merge( production, config);
 } else {
 
-    module.exports = merge( production, config);
+    console.log("development")
+    module.exports = merge( development, config);
 }
