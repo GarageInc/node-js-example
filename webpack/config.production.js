@@ -8,20 +8,19 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify('production'),
-                'NODE_PATH': ".",
-                'LANG': JSON.stringify("ru-ru")
+                'NODE_PATH': "."
             },
             __DEVELOPMENT__: false
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-                drop_console: true,
-                unsafe: true
-            },
-            output: {
-                comments: false
-            }
-        })
+        //new webpack.optimize.UglifyJsPlugin({
+        //    compress: {
+        //        warnings: false,
+        //        drop_console: true,
+        //        unsafe: true
+        //    },
+        //    output: {
+        //        comments: false
+        //    }
+        //})
     ]
 };

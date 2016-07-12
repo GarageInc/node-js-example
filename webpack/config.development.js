@@ -4,17 +4,15 @@ var webpack = require('webpack');
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
 
+    devtool:  "source-map" ,
+
     entry: [
         'webpack-hot-middleware/client','webpack/hot/dev-server'
     ],
 
-    watch: false,
+    watch: true,
     watchOptions: {
         aggregateTimeout: 300
-    },
-
-    devServer:{
-        contentBase: "./public"
     },
 
     plugins: [
@@ -22,7 +20,6 @@ module.exports = {
             'process.env': {
                 'NODE_ENV': JSON.stringify('development'),
                 'NODE_PATH': ".",
-                'LANG': JSON.stringify("ru-ru")
             },
             __DEVELOPMENT__: true
         })

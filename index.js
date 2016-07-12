@@ -8,7 +8,7 @@ var http = require('http');
 var morgan = require('morgan');
 var config = require('./config');
 var HttpError = require('./error').HttpError;
-var session = require('express-session')
+var expressSession = require('express-session')
 var errorHandler = require('errorhandler')
 
 var app = express();
@@ -19,9 +19,9 @@ var app = express();
 
 
 (function initWebpack() {
-  const webpack = require('webpack');
-  const webpackConfig = require('./webpack/config.common');
-  const compiler = webpack( webpackConfig);
+  var webpack = require('webpack');
+  var webpackConfig = require('./webpack/webpack.config.js');
+  var compiler = webpack( webpackConfig);
 
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath
@@ -31,6 +31,10 @@ var app = express();
     log: console.log,
     path: '/__webpack_hmr'
   }));
+
+  compiler.run(function(){
+
+  })
 
 })();
 
@@ -61,7 +65,7 @@ app.use(cookieParser());
 
 var sessionStore = require('./libs/sessionStore');
 
-app.use(session({
+app.use(expressSession({
   secret: config.get('session:secret'), // ABCDE242342342314123421.SHA256
   key: config.get('session:key'),
   cookie: config.get('session:cookie'),
@@ -99,19 +103,19 @@ app.use(function(err, req, res, next) {
   DEV_SERVER
  */
 
-//var server = http.createServer( app)
-//
-//app.listen(process.env.PORT || config.get('port'), '127.0.0.1', function(err) {
-//  if (err) {
-//    console.log(err);
-//    return;
-//  }
-//
-//  console.log('Listening ...');
-//});
-//
-//
-//var io = require('./socket')( server);
-//app.set('io', io);
+var server = http.createServer( app)
+
+app.listen( config.get('port'), '127.0.0.1', function(err) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+
+  console.log("Listening on %j", config.get('port'));
+});
+
+
+var io = require('./socket')( server);
+app.set('io', io);
 
 module.exports = app;
