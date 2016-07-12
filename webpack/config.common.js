@@ -63,7 +63,7 @@ var config = {
     },
 
     plugins: [
-        new CleanWebpackPlugin(path.resolve(__dirname, "./../build"),{
+        new CleanWebpackPlugin(path.resolve(__dirname, "./../browser"),{
             verbose:true,
             root: path.resolve(__dirname, '../')
         }),
@@ -85,6 +85,17 @@ var config = {
         new webpack.ProvidePlugin({
             _: "underscore"
         }),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                drop_console: true,
+                unsafe: true
+            },
+            output: {
+                comments: false
+            }
+        })
     ]
 
 };

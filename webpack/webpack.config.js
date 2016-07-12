@@ -15,16 +15,13 @@ var config = {
     context: path.resolve(__dirname, "./../"),
 
     entry: {
-        clientLibs:[
+        libs:[
             "./entry.js"
-        ],
-        server: [
-            "./bin/index.js"
         ]
     },
 
     output: {
-        path: path.join(__dirname, "..", "build"),
+        path: path.join(__dirname, "..", "browser"),
         filename:  "[name].js",
         chunkFilename: '[id].js'
         //filename:  "[name].js",
@@ -48,6 +45,6 @@ mergeConfig.plugins.push(
 }))
 
 
-console.log(mergeConfig)
+//console.log(mergeConfig)
 
 module.exports = mergeConfig;

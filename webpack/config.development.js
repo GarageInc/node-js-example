@@ -4,8 +4,6 @@ var path = require('path');
 var fs = require('fs')
 var merge = require('webpack-merge');
 
-var commonConfig = require('./config.common.js')
-
 var devConfig = {
 
     devtool: 'source-map',
@@ -13,12 +11,15 @@ var devConfig = {
     context: path.resolve(__dirname, "./../"),
 
     output: {
-        publicPath: "/"
+        path: path.join(__dirname, "..", "browser"),
+        publicPath: "/",
+        filename:  "[name].js",
+        chunkFilename: '[id].js'
     },
 
     entry: [
-        'webpack-hot-middleware/client', 'webpack/hot/dev-server',
-        './index.js'
+        'webpack-hot-middleware/client'
+        , 'webpack/hot/dev-server'
         , './entry.js'
     ],
 
@@ -35,7 +36,6 @@ var devConfig = {
             },
             __DEVELOPMENT__: true
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin()
     ]
 };
@@ -44,5 +44,5 @@ var commonConfig = require('./config.common.js')
 
 var mergeConfig = merge(commonConfig, devConfig)
 
-
+console.log(mergeConfig)
 module.exports = mergeConfig;

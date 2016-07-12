@@ -18,6 +18,8 @@ var app = express();
   WEBPACK
  */
 
+console.log(app.get("env"));
+
 if (app.get("env") == "development"){
 
   (function initWebpack() {
@@ -25,12 +27,11 @@ if (app.get("env") == "development"){
     var webpackConfig = require('./webpack/config.development.js');
     var compiler = webpack( webpackConfig);
 
-    console.log( webpackConfig)
     app.use(require('webpack-dev-middleware')( compiler, {
       noInfo: true,
-      publicPath: webpackConfig.output.publicPath
-      //inline: true,
-      //hot: true
+      publicPath: webpackConfig.output.publicPath,
+      inline: true,
+      hot: true
     }));
 
     app.use(require('webpack-hot-middleware')(compiler, {
