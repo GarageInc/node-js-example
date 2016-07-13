@@ -15,35 +15,6 @@ var errorHandler = require('errorhandler')
 var app = express();
 
 /*
-  WEBPACK
- */
-
-console.log(app.get("env"));
-
-if (app.get("env") == "development"){
-
-  (function initWebpack() {
-    var webpack = require('webpack');
-    var webpackConfig = require('./webpack/config.development.js');
-    var compiler = webpack( webpackConfig);
-
-    app.use(require('webpack-dev-middleware')( compiler, {
-      noInfo: true,
-      publicPath: webpackConfig.output.publicPath,
-      inline: true,
-      hot: true
-    }));
-
-    app.use(require('webpack-hot-middleware')(compiler, {
-      log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
-    }));
-
-
-  })();
-}
-
-
-/*
   ENGINES
  */
 
@@ -83,6 +54,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('./middleware/sendHttpError'));
 app.use(require('./middleware/loadUser'));
 
+
+/*
+ WEBPACK
+ */
+
+( function initWebpack() {
+  var webpack = require('webpack');
+  var webpackConfig =  require('./utils/webpack.config.js');
+  var compiler = webpack( webpackConfig);
+
+
+  app.use(require('webpack-dev-middleware')( compiler, {
+    stats: {colors: true},
+    hot: true,
+    publicPath: webpackConfig.output.publicPath
+  }));
+
+  app.use(require('webpack-hot-middleware')(compiler, {
+    log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
+  }));
+} )();
+
+
 require('./routes')(app);
 
 
@@ -104,8 +98,9 @@ app.use(function(err, req, res, next) {
   }
 });
 
+
 /*
-  DEV_SERVER
+ DEV_SERVER
  */
 
 var server = http.createServer( app)
